@@ -15,7 +15,7 @@ A learning project in Google Earth Engine and Python. I wanted to know if free s
 
 ## Data
 
-**Catalogue.** The data is James Q. Jacobs' Amazon geoglyph database ([Hundreds of Geoglyphs Discovered in the Amazon](https://www.jqjacobs.net/archaeology/geoglyph.html)). He compiles it from Google Earth and other satellite imagery, aerial photos, published databases and papers, and keeps updating it. I downloaded it on 7th oct 2026 and saved it as `amazon_geoglyphs.xlsx`: 1,490 rows of geoglyphs and similar earthworks, with coordinates, elevation, shape (`form`), one or two widths and a `source` field. The live file changes, so a new download will have more rows than mine. The positions come from others and I didn't check how accurate they are.
+**Catalogue.** The data is James Q. Jacobs' Amazon geoglyph database ([Hundreds of Geoglyphs Discovered in the Amazon](https://www.jqjacobs.net/archaeology/geoglyph.html)). He compiles it from Google Earth and other satellite imagery, aerial photos, published databases and papers, and keeps updating it. I downloaded it on 5th august 2026 and saved it as `amazon_geoglyphs.xlsx`: 1,490 rows of geoglyphs and similar earthworks, with coordinates, elevation, shape (`form`), one or two widths and a `source` field. The live file changes, so a new download will have more rows than mine. The positions come from others and I didn't check how accurate they are.
 
 **The catalogue is not in this repo.** The page says "All Rights Reserved" and gives no licence for the data, so I don't redistribute the spreadsheet or any file with its coordinates. Download the original from the page above. My cleaned and selected copy (`geoglyphs_selected_v2026-08-18.csv`) is not included either; the steps that made it are in the Cleaning and Picking sections below, and `01_clean_and_select.ipynb` repeats them on a fresh download.
 
@@ -138,10 +138,10 @@ Controls for terrain: shuffled labels with optical + terrain gave 0.507 (0.486 t
 - **Splits overlap.** The 20 splits aren't independent, so the ranges are descriptive only.
 - **One year, one region.** Composite is June to September 2025. Earth Engine data gets reprocessed, so a re-run later may not give exactly the same numbers.
 - **Small CNN, no tuning.** It says nothing about deep learning in general.
-- **Not one clean run.** I built and ran the notebook in pieces over several sessions. The saved CSVs let you skip the slow extraction. I haven't re-run it start to finish in one go.
+- **Not one clean run.** I built and ran the notebook in pieces over several sessions. The notebook saves partial CSVs as it goes, so you can resume. I haven't re-run it start to finish in one go.
 - **Bugs I hit and fixed** (listed so nothing is hidden):
   - A global variable `cols` got overwritten by a loop and broke one extraction.
-  - I dropped an early terrain feature (1 km local relief) because it made Earth Engine far too slow, before seeing any result. The terrain cell in `run_log_draw2.txt` still has the old relief code below the fixed lines. It did nothing, because the extraction had already finished. I deleted those leftover lines from the notebook in this repo; the log shows the cell as I ran it.
+  - I dropped an early terrain feature (1 km local relief) because it made Earth Engine far too slow, before seeing any result. The terrain cell in `run_log_draw2.txt` still has the old relief code below the fixed lines. It did nothing, because the extraction had already finished. I left that cell as I ran it.
   - The CNN cell prints a hard-coded comparison number (0.636, which is draw 1's value, not draw 2's 0.619). I left that cell as I ran it.
 
 ## Running it
@@ -153,22 +153,16 @@ Controls for terrain: shuffled labels with optical + terrain gave 0.507 (0.486 t
 5. Upload both CSVs from step 2. The clean one is optional: it keeps negatives away from all 1,474 known features, and without it the notebook falls back to the 1,003 selected ones, like draw 2.
 6. Run top to bottom. Extraction is slow (tens of minutes per block) and saves partial CSVs so you can resume.
 
-**Files shared here**, so you can skip extraction: `negatives_draw2.csv` (the draw-2 negatives, random points only; the one thing you can't regenerate), `features_v2.csv`, `features_v2_matched_shareable.csv` (the matched table with the positives' coordinates removed; it keeps the `block` column so the spatial splits still work), `features_wet_partial.csv`, `features_terrain_partial.csv`, `features_s1_partial.csv`, `chips_v1.npy` and `chip_ids_v1.csv`. They hold satellite-derived numbers plus the catalogue's codes and widths, but not its coordinates. The last cell of the notebook writes the two shareable CSVs. [BEFORE UPLOADING, OPEN EACH FILE AND CONFIRM THERE IS NO LAT/LON FOR THE POSITIVES.]
-
 ## Data, ethics and AI
 
-The positives are the locations in Jacobs' catalogue, which compiles public sources and imagery. Nothing from the catalogue is redistributed here. The negatives are random points. There are no coordinates of previously undocumented sites in this repo, and I don't use the model's outputs to locate any. [IF YOU ASK JACOBS AND HE AGREES TO YOU SHARING PART OF THE DATA, SAY SO HERE.]
+The positives are the locations in Jacobs' catalogue, which compiles public sources and imagery. Nothing from the catalogue is redistributed here. The negatives are random points. There are no coordinates of previously undocumented sites in this repo, and I don't use the model's outputs to locate any.
 
 I used AI (Claude) to help write parts of the notebook and this README while I was learning Earth Engine and spatial validation. I ran everything and I stand behind the content.
 
 ## Citing and licence
+Code: MIT. The catalogue data belongs to Jacobs and isn’t covered by this licence.
 
-Kavali, S. H. (2026). *Amazon geoglyphs: exploratory test of satellite data* [software]. Zenodo. DOI: [DOI AFTER RELEASE].
-
-Data: Jacobs, J. Q. (2010 onward). *Hundreds of Geoglyphs Discovered in the Amazon* [web page and database]. https://www.jqjacobs.net/archaeology/geoglyph.html. Accessed [DATE].
+Data: Jacobs, J. Q. (2010 onward). *Hundreds of Geoglyphs Discovered in the Amazon* [web page and database]. https://www.jqjacobs.net/archaeology/geoglyph.html. Accessed 5th August 2026.
 
 Also: de Souza, J. G. et al. (2018). Pre-Columbian earth-builders settled along the entire southern rim of the Amazon. *Nature Communications* 9, 1125.
 
-Licence: [CHOOSE BEFORE RELEASING; e.g. MIT for the code].
-
-Contact: [EMAIL OR GITHUB PROFILE].
